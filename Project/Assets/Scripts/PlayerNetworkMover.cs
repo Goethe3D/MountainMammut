@@ -11,7 +11,8 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 	float smoothing = 10f;
 //	float health = 100f;
 	bool Crouch = false;
-	bool sprint = false;
+//	bool sprint = false;
+	bool nowWalking = false;
 	bool initialLoad = true;
 
 	Animator anim;
@@ -58,6 +59,7 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 			transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * smoothing);
 			transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * smoothing);
 			anim.SetBool("Crouch", Crouch);
+			anim.SetBool("Walking", nowWalking);
 //			anim.SetBool ("Sprint", sprint);
 			yield return null;
 		}
@@ -72,6 +74,7 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 			stream.SendNext(transform.rotation);
 //			stream.SendNext(health);
 			stream.SendNext(anim.GetBool ("Crouch"));
+			stream.SendNext(anim.GetBool ("Walking"));
 //			stream.SendNext(anim.GetBool ("Sprint"));
 		}
 		else
@@ -80,6 +83,7 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 			rotation = (Quaternion)stream.ReceiveNext();
 //			health = (float)stream.ReceiveNext();
 			Crouch = (bool)stream.ReceiveNext();
+			nowWalking = (bool)stream.ReceiveNext();
 //			sprint = (bool)stream.ReceiveNext();
 
 		}

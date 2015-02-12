@@ -47,6 +47,9 @@ namespace UnitySampleAssets.Characters.FirstPerson
         private bool _jumping = false;
 		//new variable moritz
 		Animator anim;
+		private bool nowWalking = false;
+
+
 
         // Use this for initialization
         private void Start()
@@ -187,6 +190,7 @@ namespace UnitySampleAssets.Characters.FirstPerson
             _cameraRefocus.SetFocusPoint();
         }
 
+
         private void GetInput(out float speed)
         {
             // Read input
@@ -200,6 +204,17 @@ namespace UnitySampleAssets.Characters.FirstPerson
             // keep track of whether or not the character is walking or running
             _isWalking = !Input.GetKey(KeyCode.LeftShift);
 
+			//moritz
+			if(vertical>0)
+			{
+				nowWalking = true;
+			}
+
+			if(vertical<=0)
+			{
+				nowWalking = false;
+			}
+
 
 			bool Crouch = Input.GetButton ("Fire2");
 			if(Crouch) 
@@ -210,7 +225,8 @@ namespace UnitySampleAssets.Characters.FirstPerson
 			//new animations for input variables moritz
 //			anim.SetBool("Sprint", !_isWalking);
 			anim.SetBool("Crouch", Crouch);
-//			anim.SetBool("Forward", _isWalking);
+			anim.SetBool("Walking", nowWalking);
+
 #endif
             // set the desired speed to be walking or running
             speed = _isWalking ? walkSpeed : runSpeed;
