@@ -32,7 +32,7 @@ public class PluginManager : MonoBehaviour {
 	{
 		foreach (Plugin plugin in plugins) 
 		{
-			if( input.StartsWith( plugin.keyword ) )
+			if( input.ToUpperInvariant().StartsWith( plugin.keyword ) )
 			{
 				plugin.function( input.Substring( plugin.keyword.Length + 1 ) );
 				return;
