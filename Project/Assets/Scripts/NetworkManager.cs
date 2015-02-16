@@ -92,9 +92,14 @@ public class NetworkManager : MonoBehaviour {
 		AddMessage ("Spawned player: " + PhotonNetwork.player.name);
 	}
 
-	void AddMessage(string message)
+	public void AddMessage(string message)
 	{
 		photonView.RPC ("AddMessage_RPC", PhotonTargets.All, message);
+	}
+
+	public void AddChatMessage(string message)
+	{
+		photonView.RPC ("AddMessage_RPC", PhotonTargets.All, PhotonNetwork.player.name + ": " + message);
 	}
 
 	[RPC]
