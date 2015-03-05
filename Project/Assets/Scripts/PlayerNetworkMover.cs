@@ -24,7 +24,7 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 		anim = GetComponentInChildren<Animator> ();
 		if(photonView.isMine)
 		{
-			rigidbody.useGravity = true;
+			GetComponent<Rigidbody>().useGravity = true;
 			GetComponent<UnitySampleAssets.Characters.FirstPerson.FirstPersonController>().enabled = true;
 //			GetComponent<FirstPersonCharacter>().enabled = true;
 //			GetComponent<FirstPersonHeadBob>().enabled = true;

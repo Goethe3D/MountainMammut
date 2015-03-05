@@ -102,6 +102,11 @@ public class NetworkManager : MonoBehaviour {
 		photonView.RPC ("AddMessage_RPC", PhotonTargets.All, PhotonNetwork.player.name + ": " + message);
 	}
 
+	public Vector3 getPlayerPosition()
+	{
+		return player.transform.position;
+	}
+
 	[RPC]
 	void AddMessage_RPC(string message)
 	{

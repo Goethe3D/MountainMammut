@@ -42,7 +42,7 @@ public static class UWKDeploySupport
         bool windowsBuild = target == BuildTarget.StandaloneWindows || target == BuildTarget.StandaloneWindows64;
         bool linuxBuild = target == BuildTarget.StandaloneLinux || target == BuildTarget.StandaloneLinux64 || target == BuildTarget.StandaloneLinuxUniversal;
         bool osxBuild = target == BuildTarget.StandaloneOSXIntel || target == BuildTarget.StandaloneOSXIntel64 || target == BuildTarget.StandaloneOSXUniversal;
-        bool iosBuild = target == BuildTarget.iPhone;
+        bool iosBuild = target == BuildTarget.iOS;
 
         // build the target-specific streaming asset directories used for deployment
         List<string> assetDirectories = new List<string>()
