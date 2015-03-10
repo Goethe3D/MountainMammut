@@ -23,7 +23,7 @@ public static class UWKDeploySupport
                 path = path.Replace("/", "\\");
             
             if (!Directory.Exists(path))
-                Debug.LogError("Unable to remove deployment path: " + path);
+                Debug.LogError("Unable to find deployment path: " + path);
             
             if (Directory.Exists(path))
                 Directory.Delete(path, true);
@@ -61,7 +61,11 @@ public static class UWKDeploySupport
         }
         else if (osxBuild)
         {
+			#if UNITY_5_0
+			assetDirectoryPrefix = path + "/Contents/Resources/Data/StreamingAssets/";
+			#else
             assetDirectoryPrefix = path + "/Contents/Data/StreamingAssets/";
+			#endif
         }
         else if (iosBuild)
         {
@@ -83,19 +87,25 @@ public static class UWKDeploySupport
         // protect the directory for the current target by removing it from the deletion list
         if (target == BuildTarget.StandaloneWindows)
         {
-            deployPathsToDelete.Remove(path + "/StreamingAssets/uWebKit/Windows/x86");
+//            deployPathsToDelete.Remove(path + "/StreamingAssets/uWebKit/Windows/x86");
+			deployPathsToDelete.Remove(assetDirectoryPrefix + "uWebKit/Windows/x86");
+
         }
         else if (target == BuildTarget.StandaloneWindows64)
         {
-            deployPathsToDelete.Remove(path + "/StreamingAssets/uWebKit/Windows/x86_64");
+//            deployPathsToDelete.Remove(path + "/StreamingAssets/uWebKit/Windows/x86_64");
+			deployPathsToDelete.Remove(assetDirectoryPrefix + "uWebKit/Windows/x86_64");
+
         }
         else if (target == BuildTarget.StandaloneOSXIntel)
         {
-            deployPathsToDelete.Remove(path + "/Contents/Data/StreamingAssets/uWebKit/Mac/x86");
+            //deployPathsToDelete.Remove(path + "/Contents/Data/StreamingAssets/uWebKit/Mac/x86");
+			deployPathsToDelete.Remove(assetDirectoryPrefix + "uWebKit/Mac/x86");
         }
         else if (target == BuildTarget.StandaloneOSXIntel64)
         {   
-            deployPathsToDelete.Remove(path + "/Contents/Data/StreamingAssets/uWebKit/Mac/x86_64");
+            //deployPathsToDelete.Remove(path + "/Contents/Data/StreamingAssets/uWebKit/Mac/x86_64");
+			deployPathsToDelete.Remove(assetDirectoryPrefix + "uWebKit/Mac/x86_64");
         }
         
         RemovePaths(deployPathsToDelete);
