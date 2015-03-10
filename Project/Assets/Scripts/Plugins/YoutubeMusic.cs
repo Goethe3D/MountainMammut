@@ -8,6 +8,8 @@ public class YoutubeMusic : MonoBehaviour {
 	private PhotonView photonView;
 	private NetworkManager networkManager;
 
+	private List< GameObject > spawnedSongs = new List< GameObject >();
+
 	UWKWebView view;
 	GameObject viewObject;
 	GameObject emptyObject;
@@ -71,13 +73,34 @@ public class YoutubeMusic : MonoBehaviour {
 		Vector3 browserPosition = transform.position;
 		GameObject musicObject = (GameObject) Instantiate( emptyObject , browserPosition , Quaternion.identity );
 		UWKWebView.AddToGameObject( musicObject , url);
+
+		spawnedSongs.Add( musicObject );
 		
 		
+	}
+
+	[RPC]
+	void killFirstSong()
+	{
+		if( spawnedSongs.Count == 0 )
+		{
+			return;
+		}
+
+		GameObject song = spawnedSongs[ 0 ];
+		spawnedSongs.Remove( song );
+		GameObject.DestroyImmediate( song );
 	}
 
 
 	void processInput( string input )
 	{
+		if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
+		{
+			photonView.RPC( "killFirstSong" , PhotonTargets.All );
+			return;
+		}
+
 		view.SendJSMessage( "YoutubeMusic" , input );
 		
 		StartCoroutine( initializeQuery( 5 ) );
