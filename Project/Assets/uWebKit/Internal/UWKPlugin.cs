@@ -46,9 +46,11 @@ public class UWKPlugin
         app["hasProLicense"] = Application.HasProLicense();
 		string dataPath = Application.dataPath;
 		#if UNITY_5_0
-			#if !UNITY_EDITOR
+//			#if !UNITY_EDITOR
+			#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
 			// Unity 5 bug
-			dataPath += "/Resources";                
+			dataPath += "/Resources";
+			
 			#endif 
 		#endif
 		app["dataPath"] = dataPath;
