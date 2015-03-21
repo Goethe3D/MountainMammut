@@ -27,13 +27,12 @@ public class YoutubeVideo : MonoBehaviour {
 	}
 
 	[RPC]
-	void spawnVideoBrowser( string url )
+	void spawnVideoBrowser( string url , Vector3 browserPosition )
 	{
 		Quaternion browserRotation = Quaternion.Euler( 90 , 180 , 0 );
 		
 		string fullUrl = "http://mstellmacher.de/unityprojectapi/vrvideo.php?url=" + url;
-		
-		Vector3 browserPosition = networkManager.getPlayerPosition();
+
 		GameObject videoObject = (GameObject) Instantiate( videoScreen , browserPosition , browserRotation );
 		UWKWebView.AddToGameObject( videoObject , fullUrl);
 
@@ -61,6 +60,7 @@ public class YoutubeVideo : MonoBehaviour {
 			photonView.RPC( "killFirstVideo" , PhotonTargets.All );
 			return;
 		}
-		photonView.RPC( "spawnVideoBrowser" , PhotonTargets.AllViaServer , input );
+		Vector3 browserPosition = networkManager.getPlayerPosition();
+		photonView.RPC( "spawnVideoBrowser" , PhotonTargets.AllViaServer , input , browserPosition );
 	}
 }

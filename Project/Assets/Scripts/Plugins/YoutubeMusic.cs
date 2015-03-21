@@ -2,13 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+struct Song
+{
+	public GameObject spawnedSong;
+	public string query;
+}
+
 public class YoutubeMusic : MonoBehaviour {
 
 	private PluginManager pluginManager;
 	private PhotonView photonView;
 	private NetworkManager networkManager;
 
-	private List< GameObject > spawnedSongs = new List< GameObject >();
+	private List< Song > spawnedSongs = new List< Song >();
+	private Queue< string > queryStrings = new Queue< string >();
 
 	UWKWebView view;
 	GameObject viewObject;
@@ -44,9 +52,20 @@ public class YoutubeMusic : MonoBehaviour {
 		
 		view = viewObject.GetComponent<UWKWebView>();
 		view.JSMessageReceived += onJSMessage;
-		
+
+
+		queryStrings.Clear();
 		
 	}
+
+//	void onGUI()
+//	{
+//		Debug.Log( spawnedSongs.Count );
+//		for( int i = 0 ; i < spawnedSongs.Count ; ++i )
+//		{
+//			GUI.Box( new Rect( 0.8f * ( float ) Screen.width , 0.1f * ( float ) Screen.height + ( float ) i * 0.2f * Screen.height , 0.15f * ( float ) Screen.width , 0.15f * ( float ) Screen.height ) , spawnedSongs[ i ].query );   
+//		}
+//	}
 
 	void onJSMessage(UWKWebView view, string message, string json, Dictionary<string, object> values)
 	{
@@ -71,10 +90,20 @@ public class YoutubeMusic : MonoBehaviour {
 
 		
 		Vector3 browserPosition = transform.position;
-		GameObject musicObject = (GameObject) Instantiate( emptyObject , browserPosition , Quaternion.identity );
-		UWKWebView.AddToGameObject( musicObject , url);
+		Song newSong;
+		newSong.spawnedSong = (GameObject) Instantiate( emptyObject , browserPosition , Quaternion.identity );
+		UWKWebView.AddToGameObject( newSong.spawnedSong , url);
 
-		spawnedSongs.Add( musicObject );
+		if( queryStrings.Count >= 1 )
+		{
+			newSong.query = queryStrings.Dequeue();
+		}
+		else
+		{
+			newSong.query = "Song";
+		}
+
+		spawnedSongs.Add( newSong );
 		
 		
 	}
@@ -87,9 +116,15 @@ public class YoutubeMusic : MonoBehaviour {
 			return;
 		}
 
-		GameObject song = spawnedSongs[ 0 ];
+		Song song = spawnedSongs[ 0 ];
 		spawnedSongs.Remove( song );
-		GameObject.DestroyImmediate( song );
+		GameObject.DestroyImmediate( song.spawnedSong );
+	}
+
+	[RPC]
+	void addToQueryQueue( string query )
+	{
+		queryStrings.Enqueue( query );
 	}
 
 
@@ -101,6 +136,7 @@ public class YoutubeMusic : MonoBehaviour {
 			return;
 		}
 
+		photonView.RPC( "addToQueryQueue" , PhotonTargets.All , input );
 		view.SendJSMessage( "YoutubeMusic" , input );
 		
 		StartCoroutine( initializeQuery( 5 ) );
