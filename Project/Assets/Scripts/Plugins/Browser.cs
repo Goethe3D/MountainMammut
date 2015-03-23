@@ -61,6 +61,6 @@ public class Browser : MonoBehaviour {
 			photonView.RPC( "killFirstBrowser" , PhotonTargets.All );
 			return;
 		}
-		photonView.RPC( "spawnBrowserWindow" , PhotonTargets.AllViaServer , input );
+		photonView.RPC( "spawnBrowserWindow" , PhotonTargets.All , input );
 	}
 }
