@@ -112,6 +112,11 @@ public class NetworkManager : MonoBehaviour {
 		return player.transform.position;
 	}
 
+	public Quaternion getPlayerRotation()
+	{
+		return player.transform.rotation;
+	}
+
 	[RPC]
 	void AddMessage_RPC(string message)
 	{
