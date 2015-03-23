@@ -122,6 +122,22 @@ public class YoutubeMusic : MonoBehaviour {
 	}
 
 	[RPC]
+	void killAllSongs()
+	{
+		if( spawnedSongs.Count == 0 )
+		{
+			return;
+		}
+
+		while( spawnedSongs.Count > 0 )
+		{
+			Song song = spawnedSongs[ 0 ];
+			spawnedSongs.Remove( song );
+			GameObject.DestroyImmediate( song.spawnedSong );
+		}
+	}
+
+	[RPC]
 	void addToQueryQueue( string query )
 	{
 		queryStrings.Enqueue( query );
@@ -130,7 +146,12 @@ public class YoutubeMusic : MonoBehaviour {
 
 	void processInput( string input )
 	{
-		if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
+		if( input.ToUpperInvariant().StartsWith( "-KILLALL" ) )
+		{
+			photonView.RPC( "killAllSongs" , PhotonTargets.All );
+			return;
+		}
+		else if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
 		{
 			photonView.RPC( "killFirstSong" , PhotonTargets.All );
 			return;

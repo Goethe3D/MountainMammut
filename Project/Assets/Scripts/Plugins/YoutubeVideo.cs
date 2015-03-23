@@ -53,9 +53,30 @@ public class YoutubeVideo : MonoBehaviour {
 		GameObject.DestroyImmediate( video );
 	}
 
+	[RPC]
+	void killAllVideos()
+	{
+		if( spawnedVideos.Count == 0 )
+		{
+			return;
+		}
+
+		while( spawnedVideos.Count > 0 )
+		{		
+			GameObject video = spawnedVideos[ 0 ];
+			spawnedVideos.Remove( video );
+			GameObject.DestroyImmediate( video );
+		}
+	}
+
 	void processInput( string input )
 	{
-		if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
+		if( input.ToUpperInvariant().StartsWith( "-KILLALL" ) )
+		{
+			photonView.RPC( "killAllVideos" , PhotonTargets.All );
+			return;
+		}
+		else if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
 		{
 			photonView.RPC( "killFirstVideo" , PhotonTargets.All );
 			return;

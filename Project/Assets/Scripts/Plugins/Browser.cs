@@ -27,13 +27,12 @@ public class Browser : MonoBehaviour {
 	}
 	
 	[RPC]
-	void spawnBrowserWindow( string url )
+	void spawnBrowserWindow( string url , Vector3 browserPosition )
 	{
 		Quaternion browserRotation = Quaternion.Euler( 90 , 180 , 0 );
 		
 		string fullUrl = "http://www." + url;
-		
-		Vector3 browserPosition = networkManager.getPlayerPosition();
+
 		GameObject BrowserObject = (GameObject) Instantiate( BrowserScreen, browserPosition , browserRotation );
 		UWKWebView.AddToGameObject( BrowserObject , fullUrl);
 		
@@ -53,14 +52,36 @@ public class Browser : MonoBehaviour {
 		spawnedBrowsers.Remove( Browser );
 		GameObject.DestroyImmediate( Browser );
 	}
+
+	[RPC]
+	void killAllBrowsers()
+	{
+		if( spawnedBrowsers.Count == 0 )
+		{
+			return;
+		}
+
+		while( spawnedBrowsers.Count > 0 )
+		{
+			GameObject Browser = spawnedBrowsers[ 0 ];
+			spawnedBrowsers.Remove( Browser );
+			GameObject.DestroyImmediate( Browser );
+		}
+	}
 	
 	void processInput( string input )
 	{
-		if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
+		if( input.ToUpperInvariant().StartsWith( "-KILLALL" ) )
+		{
+			photonView.RPC( "killAllBrowsers" , PhotonTargets.All );
+			return;
+		} else if( input.ToUpperInvariant().StartsWith( "-KILL" ) )
 		{
 			photonView.RPC( "killFirstBrowser" , PhotonTargets.All );
 			return;
 		}
-		photonView.RPC( "spawnBrowserWindow" , PhotonTargets.All , input );
+
+		Vector3 browserPosition = networkManager.getPlayerPosition();
+		photonView.RPC( "spawnBrowserWindow" , PhotonTargets.All , input , browserPosition );
 	}
 }
