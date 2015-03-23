@@ -58,14 +58,14 @@ public class YoutubeMusic : MonoBehaviour {
 		
 	}
 
-//	void onGUI()
-//	{
+	void OnGUI()
+	{
 //		Debug.Log( spawnedSongs.Count );
-//		for( int i = 0 ; i < spawnedSongs.Count ; ++i )
-//		{
-//			GUI.Box( new Rect( 0.8f * ( float ) Screen.width , 0.1f * ( float ) Screen.height + ( float ) i * 0.2f * Screen.height , 0.15f * ( float ) Screen.width , 0.15f * ( float ) Screen.height ) , spawnedSongs[ i ].query );   
-//		}
-//	}
+		for( int i = 0 ; i < spawnedSongs.Count ; ++i )
+		{
+			GUI.Box( new Rect( 0.8f * ( float ) Screen.width , 0.1f * ( float ) Screen.height + ( float ) i * 0.06f * Screen.height , 0.15f * ( float ) Screen.width , 0.05f * ( float ) Screen.height ) , spawnedSongs[ i ].query );   
+		}
+	}
 
 	void onJSMessage(UWKWebView view, string message, string json, Dictionary<string, object> values)
 	{
