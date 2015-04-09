@@ -32,6 +32,12 @@ public class Bomb : MonoBehaviour {
 		
 	}
 
+	string ColorToHex(Color32 color)
+	{
+		string hex = color.r.ToString("X2") + color.g.ToString("X2") + color.b.ToString("X2");
+		return hex;
+	}
+
 	Color HexToColor(string hex)
 	{
 		byte r = byte.Parse(hex.Substring(0,2), System.Globalization.NumberStyles.HexNumber);
@@ -42,104 +48,17 @@ public class Bomb : MonoBehaviour {
 
 
 	[RPC]
-	void writeText( string inputText , Vector3 textPosition , Quaternion textRotation )
+	void writeText( string inputText , Vector3 textPosition , Quaternion textRotation , string textColorHex , int fontSize , FontStyle fontStyle )
 	{
 		GameObject instantiatedTextObject = (GameObject) Instantiate( textPrefab , textPosition , textRotation  );
 		TextMesh instantiatedText = instantiatedTextObject.GetComponentsInChildren< TextMesh >()[0];
 
-		instantiatedText.color = defaultTextColor;
-		instantiatedText.fontStyle = defaultFontStyle;
-		instantiatedText.fontSize = defaultFontSize;
+		Color textColor = HexToColor( textColorHex );
 
-		string[] splitStrings = inputText.Split( new Char[]{ ' ' } );
-
-		int messageStartIndex = 0;
-		bool setDefaultValues = false;
-		foreach( string word in splitStrings )
-		{
-			if( !word.ToUpperInvariant().StartsWith( "-" ) )
-			{
-				break;
-			}
-
-			if( word.ToUpperInvariant() == "-SET" )
-			{
-				setDefaultValues = true;
-			}
-
-			if( word.ToUpperInvariant().Contains( "COLOR=" ) 
-			   || word.ToUpperInvariant().Contains( "C=" ) )
-			{
-				instantiatedText.color = HexToColor( word.Substring( word.IndexOf( "=" ) + 1 ) );
-				if( setDefaultValues )
-				{
-					defaultTextColor = instantiatedText.color;
-				}
-			}
-
-			if( word.ToUpperInvariant().Contains( "BOLD" )
-			   || word.ToUpperInvariant() == "-B" )
-			{
-				if( instantiatedText.fontStyle == FontStyle.Italic )
-				{
-					instantiatedText.fontStyle = FontStyle.BoldAndItalic;
-				}
-				else
-				{
-					instantiatedText.fontStyle = FontStyle.Bold;
-				}
-
-				if( setDefaultValues )
-				{
-					defaultFontStyle = instantiatedText.fontStyle;
-				}
-			}
-
-			if( word.ToUpperInvariant().Contains( "ITALIC" )
-			   || word.ToUpperInvariant() == "-I" )
-			{
-				if( instantiatedText.fontStyle == FontStyle.Bold )
-				{
-					instantiatedText.fontStyle = FontStyle.BoldAndItalic;
-				}
-				else
-				{
-					instantiatedText.fontStyle = FontStyle.Italic;
-				}
-
-				if( setDefaultValues )
-				{
-					defaultFontStyle = instantiatedText.fontStyle;
-				}
-			}
-
-			if( word.ToUpperInvariant().Contains( "SIZE=" ) 
-			   || word.ToUpperInvariant().Contains( "S=" ) )
-			{
-				int fontSize = Convert.ToInt32( word.Substring( word.IndexOf( "=" ) + 1 ) );
-				if( fontSize > 80 )
-				{
-					fontSize = 80;
-				}
-				if( fontSize < 0 )
-				{
-					fontSize = 1;
-				}
-				instantiatedText.fontSize = fontSize;
-
-				if( setDefaultValues )
-				{
-					defaultFontSize = fontSize;
-				}
-			}
-
-			messageStartIndex += word.Length + 1;
-		}
-
-		string chatMessage = inputText.Substring( messageStartIndex );
-
-
-		instantiatedText.text = chatMessage;
+		instantiatedText.color = textColor;
+		instantiatedText.fontStyle = fontStyle;
+		instantiatedText.fontSize = fontSize;
+		instantiatedText.text = inputText;
 	}
 
 	
@@ -150,6 +69,96 @@ public class Bomb : MonoBehaviour {
 
 		Vector3 textPosition = myPosition + myRotation * textTranslationVector;
 
-		photonView.RPC( "writeText" , PhotonTargets.All , input , textPosition , myRotation );
+		Color textColor = defaultTextColor;
+		int fontSize = defaultFontSize;
+		FontStyle fontStyle = defaultFontStyle;
+
+		string[] splitStrings = input.Split( new Char[]{ ' ' } );
+		
+		int messageStartIndex = 0;
+		bool setDefaultValues = false;
+		foreach( string word in splitStrings )
+		{
+			if( !word.ToUpperInvariant().StartsWith( "-" ) )
+			{
+				break;
+			}
+			
+			if( word.ToUpperInvariant() == "-SET" )
+			{
+				setDefaultValues = true;
+			}
+			
+			if( word.ToUpperInvariant().Contains( "COLOR=" ) 
+			   || word.ToUpperInvariant().Contains( "C=" ) )
+			{
+				textColor = HexToColor( word.Substring( word.IndexOf( "=" ) + 1 ) );
+				if( setDefaultValues )
+				{
+					defaultTextColor = textColor;
+				}
+			}
+			
+			if( word.ToUpperInvariant().Contains( "BOLD" )
+			   || word.ToUpperInvariant() == "-B" )
+			{
+				if( fontStyle == FontStyle.Italic )
+				{
+					fontStyle = FontStyle.BoldAndItalic;
+				}
+				else
+				{
+					fontStyle = FontStyle.Bold;
+				}
+				
+				if( setDefaultValues )
+				{
+					defaultFontStyle = fontStyle;
+				}
+			}
+			
+			if( word.ToUpperInvariant().Contains( "ITALIC" )
+			   || word.ToUpperInvariant() == "-I" )
+			{
+				if( fontStyle == FontStyle.Bold )
+				{
+					fontStyle = FontStyle.BoldAndItalic;
+				}
+				else
+				{
+					fontStyle = FontStyle.Italic;
+				}
+				
+				if( setDefaultValues )
+				{
+					defaultFontStyle = fontStyle;
+				}
+			}
+			
+			if( word.ToUpperInvariant().Contains( "SIZE=" ) 
+			   || word.ToUpperInvariant().Contains( "S=" ) )
+			{
+				fontSize = Convert.ToInt32( word.Substring( word.IndexOf( "=" ) + 1 ) );
+				if( fontSize > 80 )
+				{
+					fontSize = 80;
+				}
+				if( fontSize < 0 )
+				{
+					fontSize = 1;
+				}
+				
+				if( setDefaultValues )
+				{
+					defaultFontSize = fontSize;
+				}
+			}
+			
+			messageStartIndex += word.Length + 1;
+		}
+		
+		string chatMessage = input.Substring( messageStartIndex );
+
+		photonView.RPC( "writeText" , PhotonTargets.All , chatMessage , textPosition , myRotation , ColorToHex( textColor ) , fontSize , fontStyle );
 	}
 }
