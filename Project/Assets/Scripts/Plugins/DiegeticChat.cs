@@ -102,7 +102,7 @@ public class DiegeticChat : MonoBehaviour {
 		
 		string chatMessage = input.Substring( messageStartIndex );
 
-		chatrooms[ chatroomId ].AddMessage( chatMessage );
+		//chatrooms[ chatroomId ].AddMessage( chatMessage );
 
 	}
 }
