@@ -12,8 +12,6 @@ public class DiegeticChat : MonoBehaviour {
 	private PhotonView photonView;
 	private NetworkManager networkManager;
 	
-	public GameObject textPrefab;
-	
 	private Vector3 chatboxTranslationVector = new Vector3( 0 , 0 , 5 );
 
 	private int defaultChatroomId = 0;
@@ -101,6 +99,10 @@ public class DiegeticChat : MonoBehaviour {
 		}
 		
 		string chatMessage = input.Substring( messageStartIndex );
+
+		DiegeticChatManager manager = chatrooms[ chatroomId ].GetComponentInChildren< DiegeticChatManager >();
+
+		manager.AddChatMessage( chatMessage );
 
 		//chatrooms[ chatroomId ].AddMessage( chatMessage );
 

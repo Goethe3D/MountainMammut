@@ -31,11 +31,11 @@ public class DiegeticChatManager : MonoBehaviour {
 //		StartCoroutine ("UpdateConnectionString");
 
 
-		AddMessage_RPC ("Bla");
-		AddMessage_RPC ("Bla");
-		AddMessage_RPC ("Bla");
-		AddMessage_RPC ("Bla");
-		AddMessage_RPC ("Bla");
+//		AddMessage_RPC ("Bla");
+//		AddMessage_RPC ("Bla");
+//		AddMessage_RPC ("Bla");
+//		AddMessage_RPC ("Bla");
+//		AddMessage_RPC ("Bla");
 	}
 //	
 //	IEnumerator UpdateConnectionString () 
