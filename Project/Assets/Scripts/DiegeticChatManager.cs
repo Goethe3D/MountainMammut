@@ -19,12 +19,20 @@ public class DiegeticChatManager : MonoBehaviour {
 	Queue<string> messages;
 	const int messageCount = 6;
 	// to keep it local and cache it
-	PhotonView photonView;
-	
-	void Start () {
+	//PhotonView photonView;
 
-		photonView = GetComponent<PhotonView> ();
+//	DiegeticChatManager()
+//	{
+//		Debug.Log( "Started" );
+//		photonView = GetComponent<PhotonView> ();
+//		messages = new Queue<string> (messageCount);
+//	}
+	
+	void Awake () {
+		Debug.Log( "Started" );
+//		photonView = GetComponent<PhotonView> ();
 		messages = new Queue<string> (messageCount);
+//		photonView.viewID = 5;
 		
 //		PhotonNetwork.logLevel = PhotonLogLevel.Full;
 //		PhotonNetwork.ConnectUsingSettings ("0.2");
@@ -102,10 +110,10 @@ public class DiegeticChatManager : MonoBehaviour {
 //		photonView.RPC ("AddMessage_RPC", PhotonTargets.All, message);
 //	}
 //
-	public void AddChatMessage(string message)
-	{
-		photonView.RPC ("AddMessage_RPC", PhotonTargets.All, PhotonNetwork.player.name + ": " + message);
-	}
+//	public void AddChatMessage(string message)
+//	{
+//		photonView.RPC ("AddMessage_RPC", PhotonTargets.All, PhotonNetwork.player.name + ": " + message);
+//	}
 //
 //	public void AddLocalMessage(string message)
 //	{
@@ -123,7 +131,7 @@ public class DiegeticChatManager : MonoBehaviour {
 //	}
 
 	[RPC]
-	void AddMessage_RPC(string message)
+	public void AddMessage_RPC(string message)
 	{
 		messages.Enqueue (message);
 		if(messages.Count > messageCount)

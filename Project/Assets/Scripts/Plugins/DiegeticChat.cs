@@ -15,6 +15,7 @@ public class DiegeticChat : MonoBehaviour {
 	private Vector3 chatboxTranslationVector = new Vector3( 0 , 0 , 5 );
 
 	private int defaultChatroomId = 0;
+	private int chatroomPhotonId = 5;
 	
 	// Use this for initialization
 	void Start () {
@@ -34,8 +35,12 @@ public class DiegeticChat : MonoBehaviour {
 	[RPC]
 	void createChatBox( Vector3 position , Quaternion rotation )
 	{
+		position.y -= 7;
 		GameObject chatBoxObject = ( GameObject ) Instantiate( chatbox , position , rotation );
 		chatrooms.Add( chatBoxObject );
+
+		PhotonView[] nViews = chatBoxObject.GetComponents<PhotonView>();
+		nViews[0].viewID = chatroomPhotonId++;
 	}
 
 
@@ -100,9 +105,14 @@ public class DiegeticChat : MonoBehaviour {
 		
 		string chatMessage = input.Substring( messageStartIndex );
 
-		DiegeticChatManager manager = chatrooms[ chatroomId ].GetComponentInChildren< DiegeticChatManager >();
+		ChatObject selectedChatObject = chatrooms[ chatroomId ].GetComponent< ChatObject >();
 
-		manager.AddChatMessage( chatMessage );
+		selectedChatObject.newMessage( PhotonNetwork.player.name + ": " + chatMessage );
+
+
+//		DiegeticChatManager manager = chatrooms[ chatroomId ].GetComponentInChildren< DiegeticChatManager >();
+//
+//		manager.AddChatMessage( chatMessage );
 
 		//chatrooms[ chatroomId ].AddMessage( chatMessage );
 
