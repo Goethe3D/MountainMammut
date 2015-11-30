@@ -21,10 +21,10 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 	
 	void Start () {
 
-		anim = GetComponentInChildren<Animator> ();
+//		anim = GetComponentInChildren<Animator> ();
 		if(photonView.isMine)
 		{
-			GetComponent<Rigidbody>().useGravity = true;
+//			GetComponent<Rigidbody>().useGravity = true;
 			//GetComponent<UnitySampleAssets.Characters.FirstPerson.FirstPersonController>().enabled = true;
 //			GetComponent<FirstPersonCharacter>().enabled = true;
 //			GetComponent<FirstPersonHeadBob>().enabled = true;
@@ -58,8 +58,8 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 		{
 			transform.position = Vector3.Lerp(transform.position, position, Time.deltaTime * smoothing);
 			transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * smoothing);
-			anim.SetBool("Crouch", Crouch);
-			anim.SetBool("Walking", nowWalking);
+//			anim.SetBool("Crouch", Crouch);
+//			anim.SetBool("Walking", nowWalking);
 //			anim.SetBool ("Sprint", sprint);
 			yield return null;
 		}
@@ -73,8 +73,8 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 			stream.SendNext(transform.position);
 			stream.SendNext(transform.rotation);
 //			stream.SendNext(health);
-			stream.SendNext(anim.GetBool ("Crouch"));
-			stream.SendNext(anim.GetBool ("Walking"));
+//			stream.SendNext(anim.GetBool ("Crouch"));
+//			stream.SendNext(anim.GetBool ("Walking"));
 //			stream.SendNext(anim.GetBool ("Sprint"));
 		}
 		else
@@ -82,8 +82,8 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 			position = (Vector3)stream.ReceiveNext();
 			rotation = (Quaternion)stream.ReceiveNext();
 //			health = (float)stream.ReceiveNext();
-			Crouch = (bool)stream.ReceiveNext();
-			nowWalking = (bool)stream.ReceiveNext();
+//			Crouch = (bool)stream.ReceiveNext();
+//			nowWalking = (bool)stream.ReceiveNext();
 //			sprint = (bool)stream.ReceiveNext();
 
 		}
