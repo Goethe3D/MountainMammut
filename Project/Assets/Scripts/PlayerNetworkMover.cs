@@ -39,6 +39,10 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 		}
 		// if its another player coroutine
 		else{
+			foreach(Camera cam in GetComponentsInChildren<Camera>())
+				cam.enabled = false;
+			foreach(fly1 flying in GetComponentsInChildren<fly1>())
+				flying.enabled = false;
 			StartCoroutine("UpdateData");
 		}
 	}
