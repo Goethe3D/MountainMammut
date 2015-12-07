@@ -85,7 +85,7 @@ public class NetworkManagerFly : MonoBehaviour {
 		yield return new WaitForSeconds(respawnTime);
 		
 		//int index = Random.Range (0, spawnPoints.Length);
-		player = PhotonNetwork.Instantiate ("flyingH",
+		player = PhotonNetwork.Instantiate ("flyingH2",
 		                                    new Vector3( 0 , 0 , 0 ),
 		                                    new Quaternion(),
 		                                    0);
