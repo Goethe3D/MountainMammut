@@ -83,6 +83,8 @@ public class NetworkManagerFly : MonoBehaviour {
 	IEnumerator SpawnPlayer(float respawnTime)
 	{
 		yield return new WaitForSeconds(respawnTime);
+
+		Debug.Log( "Spawning" );
 		
 		//int index = Random.Range (0, spawnPoints.Length);
 		player = PhotonNetwork.Instantiate ("flyingH2",
