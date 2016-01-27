@@ -25,8 +25,9 @@ public class SpawnTextField : MonoBehaviour {
 
 		if ( Input.GetKeyUp(KeyCode.Return) ) 
 		{
-			int photonId = PhotonNetwork.AllocateSceneViewID();
-			photonView.RPC( "spawnTextRPC" , PhotonTargets.All , networkManagerFly.getPlayerPosition() , networkManagerFly.getPlayerRotation() , photonId );
+			PhotonNetwork.Instantiate( "Canvas" , networkManagerFly.getPlayerPosition() , networkManagerFly.getPlayerRotation() , 0 );
+//			int photonId = PhotonNetwork.AllocateSceneViewID();
+//			photonView.RPC( "spawnTextRPC" , PhotonTargets.All , networkManagerFly.getPlayerPosition() , networkManagerFly.getPlayerRotation() , photonId );
 		}
 	
 	}

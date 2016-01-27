@@ -11,7 +11,7 @@ public class InputFieldSync : MonoBehaviour {
 	void Start () {
 	
 		photonView = GetComponent< PhotonView >();
-		inputField = GetComponent< InputField >();
+		inputField = GetComponentInChildren< InputField >();
 	}
 	
 	// Update is called once per frame
