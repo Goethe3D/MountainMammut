@@ -115,6 +115,8 @@ public class NetworkManagerFly : MonoBehaviour {
 
 	public Vector3 getPlayerPosition()
 	{
+		Debug.Log( "Get Player Position" );
+		Debug.Log ( player.transform.position );
 		return player.transform.position;
 	}
 

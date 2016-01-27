@@ -25,21 +25,27 @@ public class SpawnTextField : MonoBehaviour {
 
 		if ( Input.GetKeyUp(KeyCode.Return) ) 
 		{
-			photonView.RPC( "spawnTextRPC" , PhotonTargets.All , networkManagerFly.getPlayerPosition() , networkManagerFly.getPlayerRotation() );
+			int photonId = PhotonNetwork.AllocateSceneViewID();
+			photonView.RPC( "spawnTextRPC" , PhotonTargets.All , networkManagerFly.getPlayerPosition() , networkManagerFly.getPlayerRotation() , photonId );
 		}
 	
 	}
 
 
 	[RPC]
-	void spawnTextRPC( Vector3 position , Quaternion rotation ) {
+	void spawnTextRPC( Vector3 position , Quaternion rotation , int photonId ) {
 
 //		Vector3 myPosition = transform.position;
 //		Quaternion myRotation = transform.rotation;
+
+		Debug.Log ( "Spawning text inside RPC" );
 		
 		Vector3 textPosition = position + rotation * new Vector3( 0 , 0 , 10 );
 
 		GameObject chatBoxObject = ( GameObject ) Instantiate( canvas , textPosition , rotation );
+
+		PhotonView[] nViews = chatBoxObject.GetComponentsInChildren<PhotonView>();
+		nViews[0].viewID = photonId;
 
 	}
 }
