@@ -21,14 +21,26 @@ public class InputFieldSync : MonoBehaviour {
 	
 	}
 
-	public void setTextMesh( TextMesh mesh )
+	[RPC]
+	public void setTextMeshRPC( TextMesh mesh )
 	{
 		textMesh = mesh;
 	}
 
-	public void setTextChanger( TextChanger changer )
+	[RPC]
+	public void setTextChangerRPC( TextChanger changer )
 	{
 		textChanger = changer;
+	}
+
+	public void setTextMesh( TextMesh mesh )
+	{
+		photonView.RPC( "setTextMeshRPC" , PhotonTargets.All , mesh );
+	}
+
+	public void setTextChanger( TextChanger changer )
+	{
+		photonView.RPC( "setTextChangerRPC" , PhotonTargets.All , changer );
 	}
 
 	[RPC]
