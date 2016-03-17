@@ -6,6 +6,8 @@ public class InputFieldSync : MonoBehaviour {
 
 	InputField inputField;
 	PhotonView photonView;
+	TextMesh textMesh;
+	TextChanger textChanger;
 
 	// Use this for initialization
 	void Start () {
@@ -19,10 +21,22 @@ public class InputFieldSync : MonoBehaviour {
 	
 	}
 
+	public void setTextMesh( TextMesh mesh )
+	{
+		textMesh = mesh;
+	}
+
+	public void setTextChanger( TextChanger changer )
+	{
+		textChanger = changer;
+	}
+
 	[RPC]
 	void setInputFieldTextRPC( string text )
 	{
-		inputField.text = text;
+		textMesh.text = text;
+		textChanger.setEditing( false );
+		Destroy( gameObject );
 	}
 
 	public void setInputFieldText( string text )

@@ -23,7 +23,8 @@ public class SpawnTextField : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if ( Input.GetKeyUp(KeyCode.Return) ) 
+//		if ( Input.GetKeyUp(KeyCode.Return) ) 
+		if( false )
 		{
 			PhotonNetwork.Instantiate( "Canvas" , networkManagerFly.getPlayerPosition() , networkManagerFly.getPlayerRotation() , 0 );
 //			int photonId = PhotonNetwork.AllocateSceneViewID();
