@@ -41,7 +41,7 @@ public class TextChanger : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if ( Input.GetKeyUp(KeyCode.Return) && !editing && transform.parent.gameObject.GetComponent< PhotonView >().isMine() )
+		if ( Input.GetKeyUp(KeyCode.Return) && !editing && transform.parent.gameObject.GetComponent< PhotonView >().isMine )
 		{
 			editing = true;
 			Camera camera = transform.parent.gameObject.GetComponentInChildren< Camera >();
