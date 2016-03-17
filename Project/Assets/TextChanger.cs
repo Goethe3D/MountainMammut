@@ -11,6 +11,7 @@ public class TextChanger : MonoBehaviour {
 	bool changeEdit;
 	bool editCache;
 	float editTime;
+	bool isMe;
 
 
 
@@ -21,6 +22,7 @@ public class TextChanger : MonoBehaviour {
 		editing = false;
 		editCache = false;
 		changeEdit = false;
+		isMe = false;
 	
 	}
 
@@ -30,11 +32,16 @@ public class TextChanger : MonoBehaviour {
 		editCache = edit;
 		editTime = Time.time;
 	}
+
+	public void setIsMe( bool me )
+	{
+		isMe = me;
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		if ( Input.GetKeyUp(KeyCode.Return) && !editing )
+		if ( Input.GetKeyUp(KeyCode.Return) && !editing && transform.parent.gameObject.GetComponent< PhotonView >().isMine() )
 		{
 			editing = true;
 			Camera camera = transform.parent.gameObject.GetComponentInChildren< Camera >();
