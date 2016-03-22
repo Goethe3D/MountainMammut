@@ -40,20 +40,25 @@ public class InputFieldSync : MonoBehaviour {
 
 	public void setTextChanger( TextChanger changer )
 	{
-		photonView.RPC( "setTextChangerRPC" , PhotonTargets.All , changer );
+		//photonView.RPC( "setTextChangerRPC" , PhotonTargets.All , changer );
+		textChanger = changer;
 	}
 
 	[RPC]
 	void setInputFieldTextRPC( string text )
 	{
-		textMesh.text = text;
-		textChanger.setEditing( false );
+		//textMesh.text = text;
+		//textChanger.setText( text );
+		//textChanger.setEditing( false );
 		Destroy( gameObject );
 	}
 
 	public void setInputFieldText( string text )
 	{
 		Debug.Log ( text );
-		photonView.RPC( "setInputFieldTextRPC" , PhotonTargets.All , text );
+		textChanger.setText( text );
+		textChanger.setEditing( false );
+		//photonView.RPC( "setInputFieldTextRPC" , PhotonTargets.All , text );
+		Destroy( gameObject );
 	}
 }

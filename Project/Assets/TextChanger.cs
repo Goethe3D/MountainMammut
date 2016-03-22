@@ -18,7 +18,7 @@ public class TextChanger : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		textMesh = GetComponent< TextMesh >();
+		textMesh = GetComponentInChildren< TextMesh >();
 		editing = false;
 		editCache = false;
 		changeEdit = false;
@@ -37,18 +37,30 @@ public class TextChanger : MonoBehaviour {
 	{
 		isMe = me;
 	}
+
+	[RPC]
+	public void setTextRPC( string text )
+	{
+		textMesh.text = text;
+	}
+
+	public void setText( string text )
+	{
+		GetComponent< PhotonView >().RPC( "setTextRPC" , PhotonTargets.All , text );
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		if ( Input.GetKeyUp(KeyCode.Return) && !editing && transform.parent.gameObject.GetComponent< PhotonView >().isMine )
+		if ( Input.GetKeyUp(KeyCode.Return) && !editing && GetComponent< PhotonView >().isMine )
 		{
 			editing = true;
-			Camera camera = transform.parent.gameObject.GetComponentInChildren< Camera >();
-			GameObject canvasObject = PhotonNetwork.Instantiate( "Canvas" , transform.parent.position + 10 * transform.parent.forward , Quaternion.identity , 0 );
+			Camera camera = GetComponentInChildren< Camera >();
+			//GameObject canvasObject = PhotonNetwork.Instantiate( "Canvas" , transform.position + 10 * transform.forward , transform.rotation , 0 );
+			GameObject canvasObject = (GameObject)GameObject.Instantiate( Resources.Load( "Canvas" ) , transform.position + 10 * transform.forward , transform.rotation );
 
 			InputFieldSync canvasSync = canvasObject.GetComponent< InputFieldSync >();
-			canvasSync.setTextMesh( textMesh );
+			//canvasSync.setTextMesh( textMesh );
 			canvasSync.setTextChanger( this );
 
 		}
