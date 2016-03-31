@@ -6,6 +6,7 @@ public class TextChanger : MonoBehaviour {
 
 	TextMesh textMesh;
 	List< string > predefineStringList = new List< string >();
+	PhotonView photonView;
 	int currentStringIndex;
 	bool editing;
 	bool changeEdit;
@@ -23,6 +24,7 @@ public class TextChanger : MonoBehaviour {
 		editCache = false;
 		changeEdit = false;
 		isMe = false;
+		photonView = GetComponent< PhotonView >();
 	
 	}
 
@@ -39,14 +41,14 @@ public class TextChanger : MonoBehaviour {
 	}
 
 	[RPC]
-	public void setTextRPC( string text )
+	public void changeMyTextRPC( string text )
 	{
 		textMesh.text = text;
 	}
 
 	public void setText( string text )
 	{
-		GetComponent< PhotonView >().RPC( "setTextRPC" , PhotonTargets.All , text );
+		photonView.RPC( "changeMyTextRPC" , PhotonTargets.All , text );
 	}
 	
 	// Update is called once per frame
