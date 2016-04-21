@@ -13,6 +13,7 @@ public class TextChanger : MonoBehaviour {
 	bool editCache;
 	float editTime;
 	bool isMe;
+	fly1 flyScript;
 
 
 
@@ -25,6 +26,7 @@ public class TextChanger : MonoBehaviour {
 		changeEdit = false;
 		isMe = false;
 		photonView = GetComponent< PhotonView >();
+		flyScript = GetComponent< fly1 >();
 	
 	}
 
@@ -33,6 +35,10 @@ public class TextChanger : MonoBehaviour {
 		changeEdit = true;
 		editCache = edit;
 		editTime = Time.time;
+		if( !edit )
+		{
+			flyScript.setTranslationEnabled( true );
+		}
 	}
 
 	public void setIsMe( bool me )
@@ -72,6 +78,8 @@ public class TextChanger : MonoBehaviour {
 
 			UnityEngine.UI.InputField inputField = canvasObject.GetComponentInChildren< UnityEngine.UI.InputField >();
 			inputField.Select();
+
+			flyScript.setTranslationEnabled( false );
 
 		}
 
