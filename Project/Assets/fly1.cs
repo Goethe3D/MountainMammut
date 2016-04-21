@@ -12,6 +12,8 @@ public class fly1 : MonoBehaviour
 	private Vector2 minAngle = new Vector2(-360f, -90f);
 	private Vector2 maxAngle = new Vector2(360f, 90f);
 	private float limit = 360f;
+
+	private bool translationEnabled = true;
 	
 	// Use this for initialization
 	void Start()
@@ -23,19 +25,19 @@ public class fly1 : MonoBehaviour
 	
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.A))
+		if (Input.GetKey(KeyCode.A) && translationEnabled)
 		{
 			Strafe(-keySpeed * Time.deltaTime);
 		}
-		if (Input.GetKey(KeyCode.D))
+		if (Input.GetKey(KeyCode.D) && translationEnabled)
 		{
 			Strafe(keySpeed * Time.deltaTime);
 		}
-		if (Input.GetKey(KeyCode.W))
+		if (Input.GetKey(KeyCode.W) && translationEnabled)
 		{   
 			Fly(keySpeed * Time.deltaTime);
 		}   
-		if (Input.GetKey(KeyCode.S))
+		if (Input.GetKey(KeyCode.S) && translationEnabled)
 		{
 			Fly(-keySpeed * Time.deltaTime);
 		}
@@ -79,5 +81,10 @@ public class fly1 : MonoBehaviour
 			angle -= limit;
 		}
 		return Mathf.Clamp(angle, min, max);
+	}
+
+	public void setTranslationEnabled( bool enabled )
+	{
+		translationEnabled = enabled;
 	}
 }
