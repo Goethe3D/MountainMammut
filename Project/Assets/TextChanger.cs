@@ -48,13 +48,17 @@ public class TextChanger : MonoBehaviour {
 
 	public void setText( string text )
 	{
+		if( !photonView.isMine )
+		{
+			return;
+		}
 		photonView.RPC( "changeMyTextRPC" , PhotonTargets.All , text );
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		if ( Input.GetKeyUp(KeyCode.Return) && !editing && GetComponent< PhotonView >().isMine )
+		if ( Input.GetKeyUp(KeyCode.Return) && !editing && photonView.isMine )
 		{
 			editing = true;
 			Camera camera = GetComponentInChildren< Camera >();
@@ -64,6 +68,10 @@ public class TextChanger : MonoBehaviour {
 			InputFieldSync canvasSync = canvasObject.GetComponent< InputFieldSync >();
 			//canvasSync.setTextMesh( textMesh );
 			canvasSync.setTextChanger( this );
+
+
+			UnityEngine.UI.InputField inputField = canvasObject.GetComponentInChildren< UnityEngine.UI.InputField >();
+			inputField.Select();
 
 		}
 
