@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class TextChanger : MonoBehaviour {
 
-	public string[] textMeshComponentTags;
-	public KeyCode[] editButtons;
+	string[] textMeshComponentTags;
+	KeyCode[] editButtons;
 	TextMesh[] textMeshes;
 	PhotonView photonView;
 	int currentStringIndex;
@@ -20,7 +20,15 @@ public class TextChanger : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		textMeshes = new TextMesh[ textMeshComponentTags.Length ];
+		textMeshes = new TextMesh[ 2 ];
+		textMeshComponentTags = new string[ 2 ];
+		editButtons = new KeyCode[ 2 ];
+
+		textMeshComponentTags[ 0 ] = "TextBoxOverhead";
+		textMeshComponentTags[ 1 ] = "TextBoxFace";
+
+		editButtons[ 0 ] = KeyCode.Return;
+		editButtons[ 1 ] = KeyCode.Keypad5;
 
 		TextMesh[] textMeshesInChildren = GetComponentsInChildren< TextMesh >();
 
@@ -29,7 +37,7 @@ public class TextChanger : MonoBehaviour {
 		{
 			foreach( TextMesh tm in textMeshesInChildren )
 			{
-				if( tm.tag == textMeshComponentTag )
+				if( tm.name == textMeshComponentTag )
 				{
 					textMeshes[ tagCount++ ] = tm;
 					break;
