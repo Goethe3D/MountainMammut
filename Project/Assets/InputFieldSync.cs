@@ -8,6 +8,7 @@ public class InputFieldSync : MonoBehaviour {
 	PhotonView photonView;
 	TextMesh textMesh;
 	TextChanger textChanger;
+	int textMeshId;
 
 	// Use this for initialization
 	void Start () {
@@ -44,6 +45,11 @@ public class InputFieldSync : MonoBehaviour {
 		textChanger = changer;
 	}
 
+	public void setTextMeshId( int id )
+	{
+		textMeshId = id;
+	}
+
 	[RPC]
 	void setInputFieldTextRPC( string text )
 	{
@@ -56,7 +62,7 @@ public class InputFieldSync : MonoBehaviour {
 	public void setInputFieldText( string text )
 	{
 		Debug.Log ( text );
-		textChanger.setText( text );
+		textChanger.setText( textMeshId , text );
 		textChanger.setEditing( false );
 		//photonView.RPC( "setInputFieldTextRPC" , PhotonTargets.All , text );
 		Destroy( gameObject );

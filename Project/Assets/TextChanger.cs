@@ -4,8 +4,9 @@ using System.Collections.Generic;
 
 public class TextChanger : MonoBehaviour {
 
-	TextMesh textMesh;
-	List< string > predefineStringList = new List< string >();
+	public string[] textMeshComponentTags;
+	public KeyCode[] editButtons;
+	TextMesh[] textMeshes;
 	PhotonView photonView;
 	int currentStringIndex;
 	bool editing;
@@ -19,8 +20,24 @@ public class TextChanger : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		textMeshes = new TextMesh[ textMeshComponentTags.Length ];
 
-		textMesh = GetComponentInChildren< TextMesh >();
+		TextMesh[] textMeshesInChildren = GetComponentsInChildren< TextMesh >();
+
+		int tagCount = 0;
+		foreach( string textMeshComponentTag in textMeshComponentTags )
+		{
+			foreach( TextMesh tm in textMeshesInChildren )
+			{
+				if( tm.tag == textMeshComponentTag )
+				{
+					textMeshes[ tagCount++ ] = tm;
+					break;
+				}
+			}
+		}
+
+		//textMesh = GetComponentInChildren< TextMesh >();
 		editing = false;
 		editCache = false;
 		changeEdit = false;
@@ -47,24 +64,37 @@ public class TextChanger : MonoBehaviour {
 	}
 
 	[RPC]
-	public void changeMyTextRPC( string text )
+	public void changeMyTextRPC( int textMeshID , string text )
 	{
-		textMesh.text = text;
+		textMeshes[ textMeshID ].text = text;
 	}
 
-	public void setText( string text )
+	public void setText( int textMeshId , string text )
 	{
 		if( !photonView.isMine )
 		{
 			return;
 		}
-		photonView.RPC( "changeMyTextRPC" , PhotonTargets.All , text );
+		photonView.RPC( "changeMyTextRPC" , PhotonTargets.All , textMeshId , text );
 	}
 	
 	// Update is called once per frame
 	void Update () {
+
+		int pressedKey = -1;
+
+		int keyArrayId = 0;
+		foreach( KeyCode kc in editButtons )
+		{
+			if( Input.GetKeyUp( kc ) )
+			{
+				pressedKey = keyArrayId;
+				break;
+			}
+			keyArrayId++;
+		}
 		
-		if ( Input.GetKeyUp(KeyCode.Return) && !editing && photonView.isMine )
+		if ( pressedKey >= 0 && !editing && photonView.isMine )
 		{
 			editing = true;
 			Camera camera = GetComponentInChildren< Camera >();
@@ -74,6 +104,7 @@ public class TextChanger : MonoBehaviour {
 			InputFieldSync canvasSync = canvasObject.GetComponent< InputFieldSync >();
 			//canvasSync.setTextMesh( textMesh );
 			canvasSync.setTextChanger( this );
+			canvasSync.setTextMeshId( pressedKey );
 
 
 			UnityEngine.UI.InputField inputField = canvasObject.GetComponentInChildren< UnityEngine.UI.InputField >();
