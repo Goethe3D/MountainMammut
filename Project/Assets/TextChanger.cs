@@ -116,6 +116,7 @@ public class TextChanger : MonoBehaviour {
 
 
 			UnityEngine.UI.InputField inputField = canvasObject.GetComponentInChildren< UnityEngine.UI.InputField >();
+			inputField.text = textMeshes[ pressedKey ].text;
 			inputField.Select();
 
 			flyScript.setTranslationEnabled( false );
