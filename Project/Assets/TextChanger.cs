@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class TextChanger : MonoBehaviour {
+public class TextChanger : Photon.MonoBehaviour {
 
 	string[] textMeshComponentTags;
 	KeyCode[] editButtons;
@@ -15,11 +16,13 @@ public class TextChanger : MonoBehaviour {
 	float editTime;
 	bool isMe;
 	fly1 flyScript;
+	private Queue< KeyValuePair< int , string > > eventBuffer = new Queue< KeyValuePair< int , string > >(10);
 
 
 
 	// Use this for initialization
 	void Start () {
+		Debug.Log( "Start" );
 		textMeshes = new TextMesh[ 2 ];
 		textMeshComponentTags = new string[ 2 ];
 		editButtons = new KeyCode[ 2 ];
@@ -52,6 +55,8 @@ public class TextChanger : MonoBehaviour {
 		isMe = false;
 		photonView = GetComponent< PhotonView >();
 		flyScript = GetComponent< fly1 >();
+
+		processBufferedEvents();
 	
 	}
 
@@ -74,6 +79,13 @@ public class TextChanger : MonoBehaviour {
 	[RPC]
 	public void changeMyTextRPC( int textMeshID , string text )
 	{
+		//Debug.Log( textMeshes.Length );
+		//Debug.Log( textMeshID );
+		if( textMeshes == null )
+		{
+			eventBuffer.Enqueue( new KeyValuePair<int, string>( textMeshID , text ) );
+			return;
+		}
 		textMeshes[ textMeshID ].text = text;
 	}
 
@@ -83,7 +95,7 @@ public class TextChanger : MonoBehaviour {
 		{
 			return;
 		}
-		photonView.RPC( "changeMyTextRPC" , PhotonTargets.All , textMeshId , text );
+		photonView.RPC( "changeMyTextRPC" , PhotonTargets.AllBuffered , textMeshId , text );
 	}
 	
 	// Update is called once per frame
@@ -129,5 +141,15 @@ public class TextChanger : MonoBehaviour {
 			editing = editCache;
 		}
 	
+	}
+
+
+	public void processBufferedEvents()
+	{
+		while( eventBuffer.Count > 0 )
+		{
+			KeyValuePair< int , string > bufferedEvent = eventBuffer.Dequeue();
+			changeMyTextRPC( bufferedEvent.Key , bufferedEvent.Value );
+		}
 	}
 }
