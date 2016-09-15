@@ -56,6 +56,18 @@ public class TextChanger : Photon.MonoBehaviour {
 		photonView = GetComponent< PhotonView >();
 		flyScript = GetComponent< fly1 >();
 
+		if( photonView.isMine )
+		{
+			foreach( TextMesh tm in textMeshes )
+			{
+				if( tm.name == "TextBoxFace" )
+				{
+					MeshRenderer renderer = tm.transform.GetComponent< MeshRenderer >();
+					renderer.enabled = false;
+				}
+			}
+		}
+
 		processBufferedEvents();
 	
 	}
