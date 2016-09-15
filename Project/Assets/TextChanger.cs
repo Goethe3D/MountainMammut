@@ -141,6 +141,10 @@ public class TextChanger : Photon.MonoBehaviour {
 
 			UnityEngine.UI.InputField inputField = canvasObject.GetComponentInChildren< UnityEngine.UI.InputField >();
 			inputField.text = textMeshes[ pressedKey ].text;
+			inputField.characterLimit = 140;
+			inputField.lineType = InputField.LineType.MultiLineSubmit;
+//			RectTransform inputFieldTransform = (RectTransform) inputField.transform;
+//			inputFieldTransform.sizeDelta = new Vector2( 40 , 40 );
 			inputField.Select();
 
 			flyScript.setTranslationEnabled( false );
