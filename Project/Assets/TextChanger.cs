@@ -18,7 +18,8 @@ public class TextChanger : Photon.MonoBehaviour {
 	fly1 flyScript;
 	private Queue< KeyValuePair< int , string > > eventBuffer = new Queue< KeyValuePair< int , string > >(10);
 
-
+	const string overheadTextId = "TextBoxOverhead";
+	const string faceTextId = "TextBoxFace";
 
 	// Use this for initialization
 	void Start () {
@@ -27,8 +28,8 @@ public class TextChanger : Photon.MonoBehaviour {
 		textMeshComponentTags = new string[ 2 ];
 		editButtons = new KeyCode[ 2 ];
 
-		textMeshComponentTags[ 0 ] = "TextBoxOverhead";
-		textMeshComponentTags[ 1 ] = "TextBoxFace";
+		textMeshComponentTags[ 0 ] = overheadTextId;
+		textMeshComponentTags[ 1 ] = faceTextId;
 
 		editButtons[ 0 ] = KeyCode.Return;
 		editButtons[ 1 ] = KeyCode.Keypad5;
@@ -98,7 +99,18 @@ public class TextChanger : Photon.MonoBehaviour {
 			eventBuffer.Enqueue( new KeyValuePair<int, string>( textMeshID , text ) );
 			return;
 		}
-		textMeshes[ textMeshID ].text = text;
+
+		SmartTextMesh smartTextMesh = textMeshes[ textMeshID ].transform.GetComponent< SmartTextMesh >();
+		if( smartTextMesh == null )
+		{
+			textMeshes[ textMeshID ].text = text;
+		}
+		else
+		{
+			Debug.Log( "Using Smart Text Mesh" );
+			smartTextMesh.UnwrappedText = text;
+			smartTextMesh.NeedsLayout = true;
+		}
 	}
 
 	public void setText( int textMeshId , string text )
@@ -141,7 +153,14 @@ public class TextChanger : Photon.MonoBehaviour {
 
 			UnityEngine.UI.InputField inputField = canvasObject.GetComponentInChildren< UnityEngine.UI.InputField >();
 			inputField.text = textMeshes[ pressedKey ].text;
-			inputField.characterLimit = 140;
+			if( textMeshComponentTags[ pressedKey ] == overheadTextId )
+			{
+				inputField.characterLimit = 140;
+			}
+			else if( textMeshComponentTags[ pressedKey ] == faceTextId )
+			{
+				inputField.characterLimit = 6;
+			}
 			inputField.lineType = InputField.LineType.MultiLineSubmit;
 //			RectTransform inputFieldTransform = (RectTransform) inputField.transform;
 //			inputFieldTransform.sizeDelta = new Vector2( 40 , 40 );
