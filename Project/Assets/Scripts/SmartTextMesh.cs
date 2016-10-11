@@ -28,6 +28,20 @@ public class SmartTextMesh : MonoBehaviour
 		transform.localPosition = newPosition;
 	}
 
+	bool extendsMaxWidth( string text )
+	{
+		GUIStyle style = new GUIStyle();
+		style.font = TheMesh.font;
+		style.fontSize = TheMesh.fontSize;
+		style.fontStyle = TheMesh.fontStyle;
+
+		float width = style.CalcSize( new GUIContent( text ) ).x;
+//		Debug.Log( text );
+//		Debug.Log( width * 0.01 );
+
+		return width * 0.0075 > MaxWidth;
+	}
+
 	string BreakPartIfNeeded(string part)
 	{
 		string saveText = TheMesh.text;
@@ -67,6 +81,39 @@ public class SmartTextMesh : MonoBehaviour
 		return part;
 	}
 
+	string BreakPartIfNeededGUICalculation(string part)
+	{
+		if ( extendsMaxWidth( part ) )
+		{
+			string remaining = part;
+			part = "";
+			while (true)
+			{
+				int len;
+				for (len = 2; len <= remaining.Length; len++)
+				{
+					if ( extendsMaxWidth( remaining.Substring( 0 , len ) ) )
+					{
+						len--;
+						break;
+					}
+				}
+				if (len >= remaining.Length)
+				{
+					part += remaining;
+					break;
+				}
+				part += remaining.Substring(0, len) + System.Environment.NewLine;
+				moveUp();
+				remaining = remaining.Substring(len);
+			}
+
+			part = part.TrimEnd();
+		}
+
+		return part;
+	}
+
 	void Update()
 	{
 		if (!NeedsLayout)
@@ -84,11 +131,17 @@ public class SmartTextMesh : MonoBehaviour
 		string[] parts = text.Split(' ');
 		for (int i = 0; i < parts.Length; i++)
 		{
-			string part = BreakPartIfNeeded(parts[i]);
+			string part = BreakPartIfNeededGUICalculation(parts[i]);
 			TheMesh.text += part + " ";
-			if (TheMesh.GetComponent<Renderer>().bounds.extents.x > MaxWidth)
+//			if (TheMesh.GetComponent<Renderer>().bounds.extents.x > MaxWidth)
+//			{
+//				Debug.Log( "Inserting New Line" );
+//				TheMesh.text = builder.TrimEnd() + System.Environment.NewLine + part + " ";
+//				moveUp();
+//			}
+			if ( extendsMaxWidth( TheMesh.text ) )
 			{
-				Debug.Log( "Inserting New Line" );
+//				Debug.Log( "Inserting New Line" );
 				TheMesh.text = builder.TrimEnd() + System.Environment.NewLine + part + " ";
 				moveUp();
 			}
