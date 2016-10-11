@@ -61,7 +61,7 @@ public class InputFieldSync : MonoBehaviour {
 
 	public void setInputFieldText( string text )
 	{
-		Debug.Log ( text );
+//		Debug.Log ( text );
 		textChanger.setText( textMeshId , text );
 		textChanger.setEditing( false );
 		//photonView.RPC( "setInputFieldTextRPC" , PhotonTargets.All , text );
