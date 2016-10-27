@@ -143,7 +143,7 @@ public class TextChanger : Photon.MonoBehaviour {
 			editing = true;
 			Camera camera = GetComponentInChildren< Camera >();
 			//GameObject canvasObject = PhotonNetwork.Instantiate( "Canvas" , transform.position + 10 * transform.forward , transform.rotation , 0 );
-			GameObject canvasObject = (GameObject)GameObject.Instantiate( Resources.Load( "Canvas" ) , transform.position + 10 * transform.forward , transform.rotation );
+			GameObject canvasObject = (GameObject)GameObject.Instantiate( Resources.Load( "Canvas" ) , camera.transform.position + 10 * camera.transform.forward , camera.transform.rotation );
 
 			InputFieldSync canvasSync = canvasObject.GetComponent< InputFieldSync >();
 			//canvasSync.setTextMesh( textMesh );

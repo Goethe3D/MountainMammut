@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.VR;
 
 public class fly1 : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class fly1 : MonoBehaviour
 	private float limit = 360f;
 
 	private bool translationEnabled = true;
+	private bool mouseTranslationEnabled = true;
+
+	bool HMD = false;
 	
 	// Use this for initialization
 	void Start()
@@ -21,6 +25,13 @@ public class fly1 : MonoBehaviour
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
 		originalRotation = transform.localRotation;
+//		if (VRDevice.isPresent && GetComponent< PhotonView >().isMine ) 
+//		{
+//			mouseTranslationEnabled = false;
+//		}
+		if (VRDevice.isPresent && GetComponent< PhotonView >().isMine ) {
+			HMD = true;
+		}
 	}
 	
 	void Update()
@@ -41,9 +52,18 @@ public class fly1 : MonoBehaviour
 		{
 			Fly(-keySpeed * Time.deltaTime);
 		}
-		
+
+		if (!mouseTranslationEnabled)
+		{
+			return;
+		}
+
 		float dx = Input.GetAxis("Mouse X");
-		float dy = Input.GetAxis("Mouse Y");
+		float dy = 0;
+		if( !HMD )
+		{
+			dy = Input.GetAxis("Mouse Y");
+		}
 		Look(new Vector2(dx, dy) * mouseSpeed);
 	}
 	
@@ -66,8 +86,10 @@ public class fly1 : MonoBehaviour
 		
 		Quaternion quatX = Quaternion.AngleAxis(angle.x, Vector3.up);
 		Quaternion quatY = Quaternion.AngleAxis(angle.y, -Vector3.right);
-		
+
 		transform.localRotation = originalRotation * quatX * quatY;
+		//transform.localRotation = originalRotation * quatX * quatY * eye.transform.localRotation;
+		//eye.transform.localRotation = Quaternion.identity;
 	}
 	
 	float ClampAngle(float angle, float min, float max)
@@ -86,5 +108,10 @@ public class fly1 : MonoBehaviour
 	public void setTranslationEnabled( bool enabled )
 	{
 		translationEnabled = enabled;
+	}
+
+	public void setMouseTranslationEnabled( bool enabled )
+	{
+		mouseTranslationEnabled = enabled;
 	}
 }

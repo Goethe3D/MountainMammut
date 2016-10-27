@@ -14,6 +14,7 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 //	bool sprint = false;
 	bool nowWalking = false;
 	bool initialLoad = true;
+	Camera camera;
 
 	Animator anim;
 
@@ -33,7 +34,7 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 //				rot.enabled = true;
 			foreach(Camera cam in GetComponentsInChildren<Camera>())
 				cam.enabled = true;
-
+			camera = GetComponentInChildren< Camera > ();
 //			transform.Find ("Head Joint/First Person Camera/GunCamera/Candy-Cane").gameObject.layer = 11;
 //			transform.Find ("Head Joint/First Person Camera/GunCamera/Candy-Cane/Sights").gameObject.layer = 11;
 		}
@@ -74,8 +75,8 @@ public class PlayerNetworkMover : Photon.MonoBehaviour {
 	{
 		if(stream.isWriting)
 		{
-			stream.SendNext(transform.position);
-			stream.SendNext(transform.rotation);
+			stream.SendNext(camera.transform.position);
+			stream.SendNext(camera.transform.rotation);
 //			stream.SendNext(health);
 //			stream.SendNext(anim.GetBool ("Crouch"));
 //			stream.SendNext(anim.GetBool ("Walking"));
