@@ -21,6 +21,11 @@ public class TextChanger : Photon.MonoBehaviour {
 	const string overheadTextId = "TextBoxOverhead";
 	const string faceTextId = "TextBoxFace";
 
+	InputField currentInputField;
+	int currentEditId;
+
+	FaceDatabase m_faceDatabase;// = new FaceDatabase();
+
 	// Use this for initialization
 	void Start () {
 		Debug.Log( "Start" );
@@ -32,9 +37,11 @@ public class TextChanger : Photon.MonoBehaviour {
 		textMeshComponentTags[ 1 ] = faceTextId;
 
 		editButtons[ 0 ] = KeyCode.Return;
-		editButtons[ 1 ] = KeyCode.Keypad5;
+		editButtons[ 1 ] = KeyCode.LeftControl;
 
 		TextMesh[] textMeshesInChildren = GetComponentsInChildren< TextMesh >();
+
+		m_faceDatabase = GetComponent< FaceDatabase >();
 
 		int tagCount = 0;
 		foreach( string textMeshComponentTag in textMeshComponentTags )
@@ -107,7 +114,6 @@ public class TextChanger : Photon.MonoBehaviour {
 		}
 		else
 		{
-			Debug.Log( "Using Smart Text Mesh" );
 			smartTextMesh.UnwrappedText = text;
 			smartTextMesh.NeedsLayout = true;
 		}
@@ -168,6 +174,25 @@ public class TextChanger : Photon.MonoBehaviour {
 
 			flyScript.setTranslationEnabled( false );
 
+			currentInputField = inputField;
+			currentEditId = pressedKey;
+
+		}
+
+		int faceId = FaceDatabase.numberButtonPressed();
+		if( editing && textMeshComponentTags[ currentEditId ] == faceTextId && faceId >= 0 )
+		{
+			if( Input.GetKey( KeyCode.LeftAlt ) )
+			{
+				if( Input.GetKey( KeyCode.LeftShift ) )
+				{
+					m_faceDatabase.setFace( faceId , currentInputField.text );
+				}
+				else
+				{
+					currentInputField.text = m_faceDatabase.getFace( faceId );
+				}
+			}
 		}
 
 		if( changeEdit && Time.time - editTime > 1.0f )
