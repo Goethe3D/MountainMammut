@@ -6,6 +6,7 @@ public class fly1 : MonoBehaviour
 {
 	public float keySpeed = 10;
 	public float mouseSpeed = 1.25f;
+	public float turnSpeed = 50;
 	public GameObject eye;
 	
 	private Quaternion originalRotation;
@@ -64,6 +65,27 @@ public class fly1 : MonoBehaviour
 		{
 			dy = Input.GetAxis("Mouse Y");
 		}
+
+		if( Input.GetKey(KeyCode.LeftArrow ) && translationEnabled )
+		{
+			dx -= turnSpeed * Time.deltaTime;
+		}
+
+		if( Input.GetKey(KeyCode.RightArrow) && translationEnabled )
+		{
+			dx += turnSpeed * Time.deltaTime;
+		}
+
+		if( Input.GetKey(KeyCode.DownArrow ) && translationEnabled )
+		{
+			dy -= turnSpeed * Time.deltaTime;
+		}
+
+		if( Input.GetKey(KeyCode.UpArrow) && translationEnabled )
+		{
+			dy += turnSpeed * Time.deltaTime;
+		}
+			
 		Look(new Vector2(dx, dy) * mouseSpeed);
 	}
 	
