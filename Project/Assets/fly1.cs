@@ -76,14 +76,17 @@ public class fly1 : MonoBehaviour
 			dx += turnSpeed * Time.deltaTime;
 		}
 
-		if( Input.GetKey(KeyCode.DownArrow ) && translationEnabled )
+		if( !HMD )
 		{
-			dy -= turnSpeed * Time.deltaTime;
-		}
+			if( Input.GetKey(KeyCode.DownArrow ) && translationEnabled )
+			{
+				dy -= turnSpeed * Time.deltaTime;
+			}
 
-		if( Input.GetKey(KeyCode.UpArrow) && translationEnabled )
-		{
-			dy += turnSpeed * Time.deltaTime;
+			if( Input.GetKey(KeyCode.UpArrow) && translationEnabled )
+			{
+				dy += turnSpeed * Time.deltaTime;
+			}
 		}
 			
 		Look(new Vector2(dx, dy) * mouseSpeed);
